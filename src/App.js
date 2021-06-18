@@ -21,9 +21,8 @@ const App = (props) => {
                                  dialogsData={props.state.messagesPage.dialogsData}/>}/>
                     <Route path={'/profile'} component={() =>
                         <Profile postsData={props.state.profilePage.postsData}
-                                 addPost={props.addPost}
-                                 newPostText={props.state.profilePage.newPostText}
-                                 updateNewPostText={props.updateNewPostText}/>}/>
+                                 dispatch={props.dispatch}
+                                 newPostText={props.state.profilePage.newPostText} />}/>
                     <Route path={'/news'} component={News}/>
                     <Route path={'/music'} component={Music}/>
                     <Route path={'/settings'} component={Settings}/>
