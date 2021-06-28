@@ -1,3 +1,6 @@
+import profileReducer from "./profile-reducer";
+import messageReducer from "./message-reducer";
+
 let store = {
     _state: {
         messagesPage: {
@@ -15,7 +18,8 @@ let store = {
                 {id: 3, message: 'Everything Gonna be all right!'},
                 {id: 4, message: 'Yo'},
                 {id: 5, message: 'Yo'}
-            ]
+            ],
+            newMessageText: '123'
         },
 
         profilePage: {
@@ -51,20 +55,9 @@ let store = {
     },
 
     dispatch(action) { // action = {type: 'something' , arguments: some_arguments}
-        if(action.type === 'ADD-POST') {
-            let newPost = {
-                id: 4,
-                message: this._state.profilePage.newPostText,
-                likesCount: 0
-            };
-            this._state.profilePage.postsData.push(newPost);
-            this._state.profilePage.newPostText=''
-            this._callSubscriber(this._state);
-        }
-        else if (action.type === 'UPDATE-NEW-POST-TEXT') {
-            this._state.profilePage.newPostText = action.newText;
-            this._callSubscriber(this._state);
-        }
+        this._state.profilePage = profileReducer(this._state.profilePage, action);
+        this._state.messagesPage = messageReducer(this._state.messagesPage, action);
+        this._callSubscriber(this._state);
     }
 }
 
