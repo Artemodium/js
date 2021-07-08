@@ -1,0 +1,9 @@
+.usersPhoto {
+    width: 80px;
+    heght: 80px;
+}
+
+.selectedName {
+    font-size: large;
+    font-weight: bold;
+}
