@@ -1,5 +1,8 @@
 import s from './Users.module.css';
 import React from "react";
+import {NavLink} from "react-router-dom";
+import ava from "../../assets/images/i.webp";
+import {followReq, unFollowReq} from "../../api/api";
 
 const Users = (props) => {
 
@@ -44,30 +47,41 @@ const Users = (props) => {
                 props.users.map(el => <div key={el.id}>
                         <span>
                             <div>
+                                <NavLink to={'/profile/' + el.id}>
                                 <img alt={''}
-                                     src={el.photos.small != null ? el.photos.small : 'https://im0-tub-ru.yandex.net/i?id=4f45d4cc87a63fde69658f1253e781bc&n=13&exp=1'}
+                                     src={el.photos.small != null ? el.photos.small : ava}
                                      className={s.usersPhoto}/>
+                                </NavLink>
                             </div>
                             <div>
                                 {
                                     el.followed
-                                        ? <button onClick={() => {
-                                            props.unfollow(el.id)
+                                        ? <button disabled={props.followingInProgress.some(id => id === el.id)} onClick={() => {
+                                            props.setFollowingProgress(true, el.id)
+                                            followReq(el.id).then(data => {
+                                                    if (data.resultCode === 0) {
+                                                        props.unFollow(el.id)
+                                                    }
+                                                props.setFollowingProgress(false, el.id)
+                                                })
                                         }}>Unfollow</button>
-                                        : <button onClick={() => {
-                                            props.follow(el.id)
+                                        : <button disabled={props.followingInProgress.some(id => id === el.id)} onClick={() => {
+                                            props.setFollowingProgress(true, el.id)
+                                            unFollowReq(el.id, {}).then(data => {
+                                                    if (data.resultCode === 0) {
+                                                        props.follow(el.id)
+                                                    }
+                                                props.setFollowingProgress(false, el.id)
+                                                })
                                         }}>Follow</button>
                                 }
-                            </div>
-                        </span>
+                                    </div>
+                                    </span>
                     <span>
-                            <div>{el.name}</div>
-                            <div>{el.status}</div>
-                        </span>
-                    <span>
-                            <div>{'el.location.country'}</div>
-                            <div>{'el.location.city'}</div>
-                        </span>
+                                    <div>{el.name}</div>
+                                    <div>{el.status}</div>
+                                    <div>{el.id}</div>
+                                    </span>
                 </div>)}
         </div>
     )

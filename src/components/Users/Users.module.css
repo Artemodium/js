@@ -1,6 +1,6 @@
 .usersPhoto {
     width: 80px;
-    heght: 80px;
+    height: 80px;
 }
 
 .selectedName {
@@ -10,4 +10,5 @@
 
 .inactive {
     font-weight: bold;
+    font-size: small;
 }
