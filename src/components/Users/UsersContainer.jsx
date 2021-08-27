@@ -1,35 +1,25 @@
 import {connect} from "react-redux";
 import {
     follow,
-    setCurrentPage, setFollowingProgress, setIsFetching,
+    setCurrentPage,
     setPages,
-    setTotalUsersCount,
-    setUsers,
-    unFollow
+    unFollow,
+    getUsers
 } from "../../redux/users-reducer";
 import Users from "./Users";
 import React from "react";
 import Preloader from "../common/preloader/preloader";
-import {getUsersReq} from "../../api/api";
+import {withAuthRedirect} from "../../hoc/withAuthRedirect";
+import {compose} from "redux";
 
 class UsersContainer extends React.Component {
 
     componentDidMount() {
-        this.props.setIsFetching(true)
-        getUsersReq(this.props.currentPage, this.props.pagesSize).then(data => {
-                this.props.setIsFetching(false)
-                this.props.setUsers(data.items)
-                this.props.setTotalUsersCount(data.totalCount)
-            })
+        this.props.getUsers(this.props.currentPage, this.props.pagesSize);
     }
 
     onPageChanged = (pageNumb) => {
-        this.props.setIsFetching(true)
-        this.props.setCurrentPage(pageNumb)
-        getUsersReq(pageNumb, this.props.pagesSize).then(data => {
-                this.props.setIsFetching(false)
-                this.props.setUsers(data.items)
-            })
+        this.props.getUsers(pageNumb, this.props.pagesSize);
     }
 
     render() {
@@ -48,7 +38,7 @@ class UsersContainer extends React.Component {
                 interval={this.props.interval}
                 start={this.props.start}
                 end={this.props.end}
-                setFollowingProgress={this.props.setFollowingProgress}
+               /* setFollowingProgress={this.props.setFollowingProgress}*/
                 followingInProgress={this.props.followingInProgress}
             />
         </>
@@ -69,40 +59,13 @@ let mapStateToProps = (state) => {
     }
 }
 
-/*let mapDispatchToProps = (dispatch) => {
-    return {
-        follow: (userId) => {
-            dispatch(followAC(userId))
-        },
-        unfollow: (userId) => {
-            dispatch(unFollowAC(userId))
-        },
-        setUsers: (users) => {
-            dispatch(setUsersAC(users))
-        },
-        setCurrentPage: (currenPage) => {
-            dispatch(setCurrentPageAC(currenPage))
-        },
-        setTotalUsersCount: (totalCount) => {
-            dispatch(setTotalUsersCountAC(totalCount))
-        },
-        setPages: (start, end) => {
-            dispatch(setPagesAC(start, end))
-        },
-        toggleIsFetching: (isFetching) => {
-            dispatch(setIsFetchingAC(isFetching))
-        }
-    }
-}*/
-
-export default connect(mapStateToProps,
-    {
-        follow,
-        unFollow,
-        setUsers,
-        setCurrentPage,
-        setTotalUsersCount,
-        setPages,
-        setIsFetching,
-        setFollowingProgress
-    })(UsersContainer);
+export default compose(connect(mapStateToProps,
+        {
+            follow,
+            unFollow,
+            setCurrentPage,
+            setPages,
+            getUsers
+        }),
+    withAuthRedirect
+)(UsersContainer)

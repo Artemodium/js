@@ -2,7 +2,6 @@ import s from './Users.module.css';
 import React from "react";
 import {NavLink} from "react-router-dom";
 import ava from "../../assets/images/i.webp";
-import {followReq, unFollowReq} from "../../api/api";
 
 const Users = (props) => {
 
@@ -57,22 +56,10 @@ const Users = (props) => {
                                 {
                                     el.followed
                                         ? <button disabled={props.followingInProgress.some(id => id === el.id)} onClick={() => {
-                                            props.setFollowingProgress(true, el.id)
-                                            followReq(el.id).then(data => {
-                                                    if (data.resultCode === 0) {
-                                                        props.unFollow(el.id)
-                                                    }
-                                                props.setFollowingProgress(false, el.id)
-                                                })
+                                            props.unFollow(el.id)
                                         }}>Unfollow</button>
                                         : <button disabled={props.followingInProgress.some(id => id === el.id)} onClick={() => {
-                                            props.setFollowingProgress(true, el.id)
-                                            unFollowReq(el.id, {}).then(data => {
-                                                    if (data.resultCode === 0) {
-                                                        props.follow(el.id)
-                                                    }
-                                                props.setFollowingProgress(false, el.id)
-                                                })
+                                            props.follow(el.id)
                                         }}>Follow</button>
                                 }
                                     </div>
